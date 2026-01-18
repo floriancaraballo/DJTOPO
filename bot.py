@@ -5,6 +5,9 @@ import asyncio
 
 import os
 
+import imageio_ffmpeg
+FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
+
 # Cargar .env solo si existe (para desarrollo local)
 if os.path.exists(".env"):
     from dotenv import load_dotenv
@@ -70,7 +73,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
             discord.FFmpegPCMAudio(
             data['url'],
             **ffmpeg_options,
-            executable="ffmpeg"  # asegura que use ffmpeg del PATH
+            executable=FFMPEG_PATH,  # ← usa el FFmpeg empaquetado
             ),
             data=data
         )
