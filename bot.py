@@ -10,16 +10,20 @@ FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
 
 import discord
 
-# Ruta al binario de Opus empaquetado
-OPUS_LIB_PATH = os.path.join(os.path.dirname(__file__), "libopus.so.0")
-
-if not discord.opus.is_loaded():
+def load_opus_lib():
+    if discord.opus.is_loaded():
+        return True
     try:
-        discord.opus.load_opus(OPUS_LIB_PATH)
-        print("✅ Opus cargado desde binario empaquetado")
+        discord.opus.load_opus("opus")
+        print("✅ Opus cargado")
+        return True
     except Exception as e:
-        print(f"❌ Error crítico: No se pudo cargar Opus: {e}")
-        exit(1)
+        print(f"⚠️ Opus no disponible: {e}")
+        return False
+
+if not load_opus_lib():
+    print("❌ ADVERTENCIA: Opus no está disponible.")
+
 # Cargar .env solo si existe (para desarrollo local)
 if os.path.exists(".env"):
     from dotenv import load_dotenv
