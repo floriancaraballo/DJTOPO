@@ -4,10 +4,19 @@ import yt_dlp
 import asyncio
 
 import os
-from dotenv import load_dotenv
 
-load_dotenv()  # Carga las variables del archivo .env
-TOKEN = os.getenv('DISCORD_TOKEN')
+# Cargar .env solo si existe (para desarrollo local)
+if os.path.exists(".env"):
+    from dotenv import load_dotenv
+    load_dotenv()
+
+TOKEN = os.getenv("DISCORD_TOKEN")
+
+if not TOKEN:
+    raise ValueError(
+        "❌ No se ha encontrado DISCORD_TOKEN. "
+        "En local usa un archivo .env, en Railway configúralo en Variables de Entorno."
+    )
 
 # Opciones para videos individuales
 ytdl_video_opts = {
