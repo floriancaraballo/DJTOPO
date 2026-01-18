@@ -21,23 +21,16 @@ if not TOKEN:
         "En local usa un archivo .env, en Railway configúralo en Variables de Entorno."
     )
 
-# Intentar cargar Opus en entornos sin sistema (como Railway)
+# Intentar cargar Opus desde fuentes alternativas
 if not discord.opus.is_loaded():
-    opus_paths = [
-        "libopus.so.0",      # Linux estándar
-        "libopus.so",        # Algunas distros
-        "opus",              # Nombre alternativo
-        "/app/.apt/usr/lib/x86_64-linux-gnu/libopus.so.0"  # Ruta común en hosts
-    ]
-    for path in opus_paths:
-        try:
-            discord.opus.load_opus(path)
-            print(f"✅ Opus cargado desde: {path}")
-            break
-        except Exception as e:
-            print(f"⚠️ Falló cargar Opus desde {path}: {e}")
-    else:
-        print("❌ No se pudo cargar Opus. El audio puede fallar.")
+    try:
+        # PyNaCl suele incluir Opus en entornos sin sistema
+        discord.opus.load_opus("opus")
+        print("✅ Opus cargado (embebido)")
+    except Exception as e:
+        print(f"⚠️ Opus no disponible: {e}")
+        # Si falla, discord.py usará su propio fallback (a veces funciona)
+
 # Opciones para videos individuales
 ytdl_video_opts = {
     'format': 'bestaudio/best',
