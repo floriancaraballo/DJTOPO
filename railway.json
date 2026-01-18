@@ -1,8 +1,0 @@
-{
-  "build": {
-    "builder": "heroku/buildpacks:20"
-  },
-  "env": {
-    "PYTHON_VERSION": "3.11.9"
-  }
-}
