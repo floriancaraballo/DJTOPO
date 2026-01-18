@@ -1,2 +1,2 @@
 [build]
-dockerfilePath = "./Dockerfile"
+dockerfilePath = "./dockerfile"
