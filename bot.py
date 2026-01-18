@@ -10,19 +10,16 @@ FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
 
 import discord
 
-# Forzar carga de Opus
+# Ruta al binario de Opus empaquetado
+OPUS_LIB_PATH = os.path.join(os.path.dirname(__file__), "libopus.so.0")
+
 if not discord.opus.is_loaded():
     try:
-        discord.opus.load_opus("libopus.so.0")
-    except Exception:
-        try:
-            # En muchos hosts, el nombre es simplemente "opus"
-            discord.opus.load_opus("opus")
-        except Exception as e:
-            print(f"❌ Error crítico: Opus no disponible. {e}")
-            # ¡No lances el bot si no hay Opus!
-            exit(1)
-
+        discord.opus.load_opus(OPUS_LIB_PATH)
+        print("✅ Opus cargado desde binario empaquetado")
+    except Exception as e:
+        print(f"❌ Error crítico: No se pudo cargar Opus: {e}")
+        exit(1)
 # Cargar .env solo si existe (para desarrollo local)
 if os.path.exists(".env"):
     from dotenv import load_dotenv
