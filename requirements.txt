@@ -1,5 +1,3 @@
 discord.py[voice]==2.3.2
 yt-dlp
 python-dotenv
-imageio-ffmpeg
-PyNaCl==1.5.0
