@@ -2,11 +2,7 @@ import discord
 from discord.ext import commands
 import yt_dlp
 import asyncio
-
 import os
-
-import imageio_ffmpeg
-FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
 
 import discord
 
