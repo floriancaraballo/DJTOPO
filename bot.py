@@ -119,8 +119,11 @@ async def play_next(ctx):
             )
             await ctx.send(f'🎶 Ahora: **{player.title}**')
         except Exception as e:
-            await ctx.send(f'❌ Error en la siguiente canción: {str(e)}')
-            await play_next(ctx)  # Intenta la siguiente
+            import traceback
+            print("=== ERROR DETALLADO ===")
+            traceback.print_exc()
+            await ctx.send(f'❌ Error al reproducir: {str(e) or "Error desconocido"}')
+            await play_next(ctx)
     else:
         # Opcional: desconectar después de X segundos
         await asyncio.sleep(30)
