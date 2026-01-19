@@ -4,22 +4,6 @@ import yt_dlp
 import asyncio
 import os
 
-import discord
-
-def load_opus_lib():
-    if discord.opus.is_loaded():
-        return True
-    try:
-        discord.opus.load_opus("opus")
-        print("✅ Opus cargado")
-        return True
-    except Exception as e:
-        print(f"⚠️ Opus no disponible: {e}")
-        return False
-
-if not load_opus_lib():
-    print("❌ ADVERTENCIA: Opus no está disponible.")
-
 # Cargar .env solo si existe (para desarrollo local)
 if os.path.exists(".env"):
     from dotenv import load_dotenv
@@ -142,28 +126,6 @@ async def play_next(ctx):
             await ctx.voice_client.disconnect()
             await ctx.send("⏹️ Si no me hacéis caso po me voy")
 
-@bot.event
-async def on_ready():
-    print(f'✅ {bot.user} está listo para reproducir música!')
-
-async def search_youtube(query: str, max_results: int = 5):
-    """Devuelve una lista de diccionarios con info de los videos."""
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'noplaylist': True,
-        'quiet': True,
-        'no_warnings': True,
-        'default_search': 'ytsearch',
-        'extract_flat': True,  # Solo metadata
-        'playlistend': max_results
-    }
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        # ¡Pasa el query directo! yt-dlp lo convierte en búsqueda automáticamente
-        info = ydl.extract_info(f"ytsearch{max_results}:{query}", download=False)
-        if 'entries' in info and info['entries']:
-            return info['entries']
-        return []
-
 @bot.command()
 async def play(ctx, *, query: str):
     # Verificación de voz (igual que antes)
@@ -260,6 +222,28 @@ async def play(ctx, *, query: str):
     except asyncio.TimeoutError:
         user_selections.pop(ctx.author.id, None)
         await ctx.send("⏰ Tiempo agotado. Usa `!play` de nuevo.")
+    
+@bot.event
+async def on_ready():
+    print(f'✅ {bot.user} está listo para reproducir música!')
+
+async def search_youtube(query: str, max_results: int = 5):
+    """Devuelve una lista de diccionarios con info de los videos."""
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'noplaylist': True,
+        'quiet': True,
+        'no_warnings': True,
+        'default_search': 'ytsearch',
+        'extract_flat': True,  # Solo metadata
+        'playlistend': max_results
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        # ¡Pasa el query directo! yt-dlp lo convierte en búsqueda automáticamente
+        info = ydl.extract_info(f"ytsearch{max_results}:{query}", download=False)
+        if 'entries' in info and info['entries']:
+            return info['entries']
+        return []
 
 @bot.command()
 async def stop(ctx):
